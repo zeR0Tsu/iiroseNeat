@@ -7,13 +7,14 @@ import { EventEmitter } from 'events'
 export const botEvent = new EventEmitter()
 
 export class BOT {
-    constructor(userName, userPasswd, userRoomId, userId) {
+    constructor(userName, userPasswd, userRoomId, userId,color) {
         this.userName = userName
         this.userPasswd = userPasswd
         this.userRoomId = userRoomId
         this.userId = userId
         this.reConnectCount = 5
         this.count = 0
+        this.color=color
         this.login()
     }
 

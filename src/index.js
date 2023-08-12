@@ -11,8 +11,8 @@ const config = JSON.parse(readFileSync(path.join(__dirname, '../Neat.config.json
 export const botList = {}
 
 for (let element of config.list) {
-    const { username, password, roomid, userid } = element
-    const bot = new BOT(username, password, roomid, userid)
+    const { username, password, roomid, userid, color } = element
+    const bot = new BOT(username, password, roomid, userid, color)
 
     botList[userid] = bot
 }
