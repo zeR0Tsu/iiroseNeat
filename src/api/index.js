@@ -15,10 +15,10 @@ export class BOT {
         this.reConnectCount = 5
         this.count = 0
         this.color=color
-        this.login()
+        this.login(userRoomId)
     }
 
-    login () {
+    login (roomId) {
         this.count++
         if (this.count > this.reConnectCount) {  return }
 
@@ -27,7 +27,7 @@ export class BOT {
         this.ws = new WS('wss://m2.iirose.com:8778')
         this.ws.onopen = () => {
             const loginPack = '*' + JSON.stringify({
-                r: this.userRoomId,
+                r: roomId,
                 n: this.userName,
                 p: this.userPasswd,
                 st: 'n',
@@ -37,7 +37,7 @@ export class BOT {
             })
             send(this.ws, loginPack)
             this.status = 'online'
-            setInterval(() => { send(this.ws, '') }, 60000)
+            setInterval(() => { send(this.ws, '') }, 50000)
         }
 
 
@@ -61,14 +61,12 @@ export class BOT {
             console.log(error);
             this.ws.close()
             this.ws = null;
-
             this.login();
         }
 
-        this.ws.onclose = () => {
-            this.ws.close()
+        this.ws.onclose = (e) => {
+            e.target.close()
             this.ws = null;
-
             this.login();
         }
     }

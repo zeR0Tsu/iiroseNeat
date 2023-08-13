@@ -1,2 +1,3 @@
 # iiroseNeat
-- iirose轻量化多开客户端
+iirose轻量化多开客户端
+支持多开账号聊天与挂机功能
