@@ -14,7 +14,7 @@ import { bankCallback } from './BankCallback.js'
 import { mediaListCallback } from './MediaListCallback.js'
 import { selfMove } from './SelfMove.js'
 import { mailboxMessage } from './MailboxMessage.js'
-
+import { musicMessage } from './MusicMessage.js'
 
 export const decoder = (msg, botId) => {
   const len = {}
@@ -35,6 +35,7 @@ export const decoder = (msg, botId) => {
   len.mediaListCallback = mediaListCallback(msg)
   len.selfMove = selfMove(msg)
   len.mailboxMessage = mailboxMessage(msg)
+  len.musicMessage = musicMessage(msg)
 
   const newObj = {}
   for (const key in len) {
@@ -44,8 +45,11 @@ export const decoder = (msg, botId) => {
         newObj[key] = len[key]
       }
 
+    
     //   if (len[key].uid) {
-    //     if (len[key].uid !== botId) { newObj[key] = len[key] }
+    //     if (len[key].uid !== bot.ctx.config.uid) { newObj[key] = len[key] }
+    //   } else {
+    //     newObj[key] = len[key]
     //   }
       newObj[key] = len[key]// 我感觉是这个，因为这个是不等于botid
     }

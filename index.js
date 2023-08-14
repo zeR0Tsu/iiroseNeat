@@ -1,25 +1,27 @@
-import { botList, nameList, BOT, botEvent } from './src/index.js'
+import { botList, nameList, BOT, botEvent, config } from './src/index.js'
 import { WebSocketServer } from 'ws'
 // 前端
 const wss = new WebSocketServer({ port: 3000 });
 
 wss.on('connection', (ws) => {
-console.log("LINK OK!");
-console.log(botList);
-    ws.send(JSON.stringify({
-        msg:{
-            config:{
-                bot:botList
-            }
+    console.log("LINK OK!");
+    const botconfig = {
+        msg: {
+            bot: config.list
         }
-    }))
+    }
+    ws.send(JSON.stringify(botconfig))
 
     ws.on('error', console.error);
 
     ws.on('message', (data) => {
-        const {userId,msg,color}=JSON.parse(data)
-        console.log('received: %s', data);
-        botList[userId].sendMessage(msg,color)
+        data = JSON.parse(data)
+        console.log(data);
+        if (data.hasOwnProperty('publicMsg')) {
+            const { userId, msg, color } = data.usermsg
+            console.log('received: %s', data)
+            botList[userId].sendPublic(msg, color)
+        }
     });
 
     botEvent.on('botEvent', (userId, msg) => {
@@ -29,10 +31,14 @@ console.log(botList);
                 userId: userId,
                 msg: msg
             }
-            console.log(data);
+            // console.log(data);
             ws.send(JSON.stringify(data))
         }
     })
+
+    setInterval(() => {
+        botList['5b3c71ca721b9'].UserProfile('落零レ')
+    }, 3000)
+
 });
 
-// /public

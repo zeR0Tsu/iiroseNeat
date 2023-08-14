@@ -6,7 +6,8 @@ import path from 'path'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
-const config = JSON.parse(readFileSync(path.join(__dirname, '../Neat.config.json')).toString())
+
+export const config = JSON.parse(readFileSync(path.join(__dirname, '../Neat.config.json')).toString())
 
 export const botList = {}
 

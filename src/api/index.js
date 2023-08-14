@@ -4,23 +4,31 @@ import pako from 'pako'
 import { decoder } from './decoder/index.js'
 import { EventEmitter } from 'events'
 
+import PublicMessage from './encoder/messages/PublicMessage.js'
+import PrivateMessage from './encoder/messages/PrivateMessage.js'
+import UserProfile from './encoder/user/UserProfile.js'
+
+
 export const botEvent = new EventEmitter()
 
 export class BOT {
-    constructor(userName, userPasswd, userRoomId, userId,color) {
+    constructor(userName, userPasswd, userRoomId, userId, color) {
         this.userName = userName
         this.userPasswd = userPasswd
         this.userRoomId = userRoomId
         this.userId = userId
         this.reConnectCount = 5
         this.count = 0
-        this.color=color
+        this.color = color
         this.login(userRoomId)
     }
-
+    /**
+     * - 登录对应的账户
+     * @param {*} roomId -
+     */
     login (roomId) {
         this.count++
-        if (this.count > this.reConnectCount) {  return }
+        if (this.count > this.reConnectCount) { return }
 
         // 这一行是禁止检测的
         process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
@@ -78,34 +86,45 @@ export class BOT {
             for (let element of funcObj.manyMessage) {
                 const test = {}
                 test[element.type] = element
-                botEvent.emit('botEvent', this.userId, test)
+                this.switchType(test)
             }
         } else {
-            botEvent.emit('botEvent', this.userId, funcObj)
+            this.switchType(funcObj)
         }
     }
 
+    switchType (msg) {
+        if (msg.hasOwnProperty('userlist')) {
+            const data = {}
+            msg.userlist.forEach(element => {
+                data[element.uid] = element
+            });
+
+            return botEvent.emit('botEvent', this.userId, data)
+        }
+        return botEvent.emit('botEvent', this.userId, msg)
+    }
     /**
-     * 发送消息
+     * 发送公屏消息
      * @param {string} msg 
      * @param {string} color - <66ccff> 
      */
-    sendMessage (msg, color) {
-        let data = ''
-        if (msg === 'cut') {
-            data = `{0${JSON.stringify({
-                m: msg,
-                mc: color,
-                i: Math.random().toString().substr(2, 12),
-            })}`
-        } else {
-            data = JSON.stringify({
-                m: msg,
-                mc: color,
-                i: Math.random().toString().substr(2, 12),
-            })
-        }
+    sendPublic (msg, color) {
+            send(this.ws, PublicMessage(msg, color))
+        
+    }
 
-        send(this.ws, data)
+    /**
+     * 发送私聊消息
+     * @param {*} userId 
+     * @param {*} msg 
+     * @param {*} color 
+     */
+    sendPrivate(userId,msg,color){
+        send(this.ws,PrivateMessage(userId,msg,color))
+    }
+
+    UserProfile(username){
+        send(this.ws,'r2')
     }
 }

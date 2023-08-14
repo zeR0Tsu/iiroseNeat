@@ -30,7 +30,26 @@ const replyMsg = (msg) => {
     return null
 }
 
-export const publicMessage = (input) => {
+export const musicMessageAnalyze = (input) => {
+    const { timestamp, avatar, username, message, color, uid, title, messageId } = input
+    const musicData = message.replace(/ /g, '').split('>')
+    console.log(musicData)
+    return {
+      timestamp: timestamp,
+      avatar: avatar,
+      username: username,
+      color: color,
+      uid: uid,
+      title: title,
+      messageId: messageId,
+      musicName: musicData[1],
+      musicSinger: musicData[2],
+      musicPic: musicData[3],
+      musicColor: musicData[4]
+    }
+  }
+
+export const musicMessage = (input) => {
     if (input.substring(0, 1) !== '"') return null
 
     const message = input.substring(1)
@@ -41,8 +60,7 @@ export const publicMessage = (input) => {
             if (/^\d+$/.test(tmp[0])) {
                 const reply = replyMsg(tmp[3])
                 const message = reply ? String(reply.shift()) : tmp[3]
-                if (message.startsWith('m__4@')) { return null }
-
+                if (message.startsWith('m__4@;')) { return null }
                 const msg = {
                     timestamp: Number(tmp[0]),
                     avatar: tmp[1],
@@ -54,11 +72,8 @@ export const publicMessage = (input) => {
                     messageId: Number(tmp[10]),
                     replyMessage: reply,
                 }
-
-
-
                 // PublicMessage
-                return msg
+                if (message.startsWith('m__4@')) { return musicMessageAnalyze(msg) }
             }
         }
     }
