@@ -7,7 +7,9 @@ wss.on('connection', (ws) => {
     console.log("LINK OK!");
     const botconfig = {
         msg: {
-            bot: config.list
+            config: {
+                bot: config.list
+            }
         }
     }
     ws.send(JSON.stringify(botconfig))
@@ -17,15 +19,15 @@ wss.on('connection', (ws) => {
     ws.on('message', (data) => {
         data = JSON.parse(data)
         console.log(data);
-        if (data.hasOwnProperty('publicMsg')) {
-            const { userId, msg, color } = data.usermsg
-            console.log('received: %s', data)
-            botList[userId].sendPublic(msg, color)
-        }
+            if (data.hasOwnProperty('publicMsg')) {
+                const { userId, msg, color } = data.publicMsg
+                console.log('received: %s', JSON.stringify(data))
+                botList[userId].sendPublic(msg, color)
+            }
     });
 
     botEvent.on('botEvent', (userId, msg) => {
-        console.log(msg)
+        // console.log(msg)
         if (msg) {
             const data = {
                 userId: userId,
@@ -36,9 +38,9 @@ wss.on('connection', (ws) => {
         }
     })
 
-    setInterval(() => {
-        botList['5b3c71ca721b9'].UserProfile('落零レ')
-    }, 3000)
+    // setInterval(() => {
+    //     botList['5b3c71ca721b9'].UserProfile('落零レ')
+    // }, 3000)
 
 });
 

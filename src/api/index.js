@@ -80,6 +80,7 @@ export class BOT {
     }
 
     getMessage (msg) {
+        console.log(msg);
         const funcObj = decoder(msg, this.userId)
         // 将会话上报
         if (funcObj.hasOwnProperty('manyMessage')) {
