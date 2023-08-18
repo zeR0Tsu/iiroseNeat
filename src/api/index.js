@@ -61,7 +61,6 @@ export class BOT {
             } else {
                 message = Buffer.from(array).toString('utf8')
             }
-            console.log(message);
             this.getMessage(message)
         }
 

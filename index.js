@@ -33,6 +33,7 @@ wss.on('connection', (ws) => {
 
     botEvent.on('botEvent', (userId, msg) => {
         if (msg) {
+            console.log(msg);
             const data = {
                 userId: userId,
                 msg: msg
