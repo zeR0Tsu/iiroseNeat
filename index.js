@@ -19,21 +19,24 @@ wss.on('connection', (ws) => {
     ws.on('message', (data) => {
         data = JSON.parse(data)
         console.log(data);
-            if (data.hasOwnProperty('publicMsg')) {
-                const { userId, msg, color } = data.publicMsg
-                console.log('received: %s', JSON.stringify(data))
-                botList[userId].sendPublic(msg, color)
-            }
+        if (data.hasOwnProperty('publicMsg')) {
+            const { userId, msg, color } = data.publicMsg
+            console.log('received: %s', JSON.stringify(data))
+            botList[userId].sendPublic(msg, color)
+        } else if (data.hasOwnProperty('privateMsg')) {
+            const { userId, msg, color ,target} = data.privateMsg
+            console.log('received: %s', JSON.stringify(data))
+            botList[userId].sendPrivate(target, msg, color)
+
+        }
     });
 
     botEvent.on('botEvent', (userId, msg) => {
-        // console.log(msg)
         if (msg) {
             const data = {
                 userId: userId,
                 msg: msg
             }
-            // console.log(data);
             ws.send(JSON.stringify(data))
         }
     })

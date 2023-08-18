@@ -61,6 +61,7 @@ export class BOT {
             } else {
                 message = Buffer.from(array).toString('utf8')
             }
+            console.log(message);
             this.getMessage(message)
         }
 
@@ -80,7 +81,6 @@ export class BOT {
     }
 
     getMessage (msg) {
-        console.log(msg);
         const funcObj = decoder(msg, this.userId)
         // 将会话上报
         if (funcObj.hasOwnProperty('manyMessage')) {
